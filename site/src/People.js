@@ -5,6 +5,7 @@ class People extends React.Component{
     constructor() {
         super();
         this.loadPeople = this.loadPeople.bind(this);
+        this.removePerson = this.removePerson.bind(this);
     }
   state = {
     people: []
@@ -31,7 +32,6 @@ class People extends React.Component{
   }
 
   addPerson(){
-    var that = this;
     var person = "null";
     if(document.getElementById("newPerson") && document.getElementById("newPerson").value){
         person = document.getElementById("newPerson").value;
@@ -43,9 +43,12 @@ class People extends React.Component{
   }
 
   removePerson(id){
-
-
+    console.log("Remove: " + id);
+    fetch("http://localhost:3001/removeperson?id=" + id).then(data => {
+        this.loadPeople(); });
   }
+
+
 
   render() {
     return (
@@ -61,7 +64,7 @@ class People extends React.Component{
         <div>
             {this.state.people.map(person => 
                 <div>
-                    <p key={person.id}>{person.name}<button onClick={() => this.removePerson(person.id).bind(this)}>Delete</button></p>
+                    <p key={person.id}>{person.name}<button onClick={() => this.removePerson(person.id)}>Delete</button></p>
                 </div>
             )
 
