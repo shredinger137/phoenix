@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-class People extends React.Component{
+class Practices extends React.Component{
     constructor() {
         super();
         this.loadPeople = this.loadPeople.bind(this);
@@ -92,8 +92,4 @@ class People extends React.Component{
 }
 }
 
-export default People;
-
-/*         {this.state.people.map(person =>
-                <p key={person.name}>{person.name}<br/></p>
-            )} */
+export default Practices;

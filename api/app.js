@@ -56,9 +56,7 @@ app.get("/people", function(req, res) {
   })
 
 
-  //TODO: Make 'deleted' and 'active' into flags.
-  //List people API should only include active.
-  //Make timestamp for name creation.
+  //Includes delete and undelete
 
   app.get("/removeperson", function(req, res) {
     console.log("delete");
@@ -66,7 +64,12 @@ app.get("/people", function(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     var id;
     if (req.query.id){
-        id = req.query.id;
+        id = new mongo.ObjectID(req.query.id);
+    }
+    if (req.query && req.query.action && req.query.action =="undelete"){
+      var action = "active";
+    } else {
+      var action = "deleted";
     }
 
     mongo.connect(
@@ -75,10 +78,11 @@ app.get("/people", function(req, res) {
       function(err, db) {
         if (err) throw err;
         var dbo = db.db("phoenix");
-        dbo.collection("people").updateOne({id: id}, {$set: {status: "Deleted"}}, function(err, result) {
+        dbo.collection("people").updateOne({_id: id}, {$set: {status: action}}, function(err, result) {
             if (err) throw err;
             else {
                 res.send("200");
+                console.log(id);
             }
             db.close();
       }
