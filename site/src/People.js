@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { config } from "./phoenix.js";
+import { config } from "./phoenix.config";
 
 class People extends React.Component{
     constructor() {
