@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { config } from "./config.js";
 
 class People extends React.Component{
     constructor() {
@@ -20,7 +21,7 @@ class People extends React.Component{
   }
 
   loadPeople = () => {
-      fetch("http://localhost:3001/people").then(response => response.json()).then(responseJson => {
+      fetch("http://localhost:3221/people").then(response => response.json()).then(responseJson => {
         if(responseJson && responseJson["allPeople"]){
             this.setState({people: responseJson["allPeople"]});
         }
@@ -37,17 +38,17 @@ class People extends React.Component{
         document.getElementById("newPerson").value = "";
     }
 
-    fetch("http://localhost:3001/addperson?name=" + person).then(data => {
+    fetch("http://localhost:3221/addperson?name=" + person).then(data => {
         this.loadPeople(); });
   }
 
   removePerson(id){
-    fetch("http://localhost:3001/removeperson?id=" + id).then(data => {
+    fetch("http://localhost:3221/removeperson?id=" + id).then(data => {
         this.loadPeople(); });
   }
 
   undelete(id){
-    fetch("http://localhost:3001/removeperson?id=" + id + "&action=undelete").then(data => {
+    fetch("http://localhost:3221/removeperson?id=" + id + "&action=undelete").then(data => {
         this.loadPeople(); });
   }
 
