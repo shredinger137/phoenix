@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { config } from "./phoenix.config";
+import { config } from "./config.js";
 
 class People extends React.Component{
     constructor() {
@@ -14,7 +14,6 @@ class People extends React.Component{
 
   componentDidMount() {
     this.loadPeople();
-    const _this = this;
   }
 
   componentDidUpdate(prevProps, prevState) {
