@@ -4,8 +4,20 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.1.0",
+    "cookie-parser": "^1.4.4",
+    "cookieparser": "^0.1.0",
     "express": "^4.17.1",
-    "mongodb": "^3.5.2"
+    "is-empty": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.2",
+    "mongoose": "^5.8.11",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "password-hash": "^1.2.2",
+    "validator": "^12.2.0"
   },
   "devDependencies": {},
   "scripts": {

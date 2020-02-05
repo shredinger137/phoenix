@@ -5,6 +5,7 @@ import RollCall from './RollCall';
 import * as serviceWorker from './serviceWorker';
 import { Route, BrowserRouter as Router } from 'react-router-dom'
 import People from './People'
+import Login from './Login'
 
 const routing = (
     <Router>
@@ -12,7 +13,9 @@ const routing = (
         <Route exact path="/">
           <People />
         </Route>
-
+        <Route path ="/login">
+          <Login />
+        </Route>
       </div>
     </Router>
   )
