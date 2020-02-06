@@ -11,10 +11,13 @@ const routing = (
     <Router>
       <div>
         <Route exact path="/">
-          <People />
+          <Login />
         </Route>
         <Route path ="/login">
           <Login />
+        </Route>
+        <Route path ="/people">
+          <People />
         </Route>
       </div>
     </Router>

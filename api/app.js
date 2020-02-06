@@ -104,6 +104,47 @@ app.get("/people", function(req, res) {
     }
   })
 
+  app.get("/login", function(req, res) {
+    console.log("Triggered login");
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    var username, password
+    if (req.query.username && req.query.password){
+        username = req.query.username;
+        password = req.query.password;
+    }
+
+    mongo.connect(
+      mongourl,
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("phoenix");
+        dbo
+          .collection("accounts")
+          .findOne({username: username}, function(err, account){
+            console.log("DB");
+            if (err) {
+              console.log(err);
+            }
+            if(account){
+              if(passwordHash.verify(password, account["password"])){
+                res.send("authentic") } else {
+                  res.send("invalid_login");
+                }
+              } else {
+                res.send("account_not_found");
+              }
+            }
+          );
+      }
+    );
+
+
+
+    }
+  )
+
   function makeAccount(username, password, res){
     if(checkUsername(username)){
       mongo.connect(
@@ -124,6 +165,9 @@ app.get("/people", function(req, res) {
     });
   }
   }
+
+
+
 
   function checkUsername(username){
     mongo.connect(
