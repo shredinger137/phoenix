@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { config } from "./config.js";
 import './css/bootstrap.css';
+import axios from 'axios';
 
 class Login extends React.Component{
     constructor() {
@@ -24,11 +25,19 @@ class Login extends React.Component{
   }
 
 
-  submitLogin(){
+
+  submitLogin(e){
+    e.preventDefault();
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
-    fetch(config.api + "/login?username=" + username + "&password=" + password).then(data => {
-        this.setState({loginResponse: data}); console.log(data); }); 
+    axios.get(config.api + "/login?username=" + username + "&password=" + password, {withCredentials: true}).then(res => {
+      if(res && res.data && res.data.result){
+        this.setState({loginResponse: res.data.result});
+        }
+        console.log(res);
+    })
+
+
   }
 
 
@@ -42,8 +51,9 @@ class Login extends React.Component{
         <header>
             <h1>Phoenix: Login</h1>
         </header>
+        <p>{this.state.loginResponse}</p>
         <br/><br/>
-        <form className="w-25 text-center" style={{margin: "0 auto"}}>
+        <form className="w-25 text-center" style={{margin: "0 auto"}} onSubmit={this.submitLogin.bind(this)}>
         <div className="form-group">
           <label for="username">Username or Email Address</label>
           <input type="text" className="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email" />
@@ -51,10 +61,11 @@ class Login extends React.Component{
         <div className="form-group">
           <label for="password">Password</label>
           <input type="password" className="form-control" id="password" placeholder="Password" />
-        </div>
-        <button className="btn btn-primary" onClick={() => this.submitLogin()}>Log In</button>
+        </div> 
+        <button className="btn btn-primary" type="submit">Log In</button>
       </form>
-      <p>{this.state.loginResponse}</p>
+      
+      
 
   </div>)
 

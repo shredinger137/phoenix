@@ -3,10 +3,22 @@ var express = require("express");
 var app = express();
 var mongourl = "mongodb://localhost:27017";
 var passwordHash = require('password-hash');
+var jwt = require('jsonwebtoken');
+const cookieParser = require("cookie-parser");
+const secret = "temp"; //TODO: Obviously this changes to a config thing later.
+app.use(cookieParser());
 
 app.get("/people", function(req, res) {
+  var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000"];
+  var origin = req.headers.origin;
+  if(allowedOrigins.indexOf(origin) > -1){
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Credentials', true)
+
+    if(req.cookies || req.signedCookies){ console.log("token")}
+
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "*");
     mongo.connect(
       mongourl,
       { useNewUrlParser: true, useUnifiedTopology: true },
@@ -105,9 +117,18 @@ app.get("/people", function(req, res) {
   })
 
   app.get("/login", function(req, res) {
+    var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000"];
+    var origin = req.headers.origin;
+    if(allowedOrigins.indexOf(origin) > -1){
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     console.log("Triggered login");
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    )
     var username, password
     if (req.query.username && req.query.password){
         username = req.query.username;
@@ -123,17 +144,28 @@ app.get("/people", function(req, res) {
         dbo
           .collection("accounts")
           .findOne({username: username}, function(err, account){
-            console.log("DB");
             if (err) {
               console.log(err);
             }
             if(account){
               if(passwordHash.verify(password, account["password"])){
-                res.send("authentic") } else {
-                  res.send("invalid_login");
+
+                //Issue token
+
+                const payload = { username };
+                const token = jwt.sign(payload, secret, {
+                  expiresIn: '14d'
+                })
+                res.cookie('token', token, { httpOnly: true })
+                .sendStatus(200); }
+            
+
+
+               else {
+                  res.send({result: "invalid_login"});
                 }
               } else {
-                res.send("account_not_found");
+                res.send({result: "account_not_found"});
               }
             }
           );

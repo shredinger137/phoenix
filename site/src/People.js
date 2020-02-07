@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { config } from "./config.js";
+import axios from 'axios';
 
 class People extends React.Component{
     constructor() {
@@ -20,13 +21,14 @@ class People extends React.Component{
   }
 
   loadPeople = () => {
-      fetch(config.api + "/people").then(response => response.json()).then(responseJson => {
-        if(responseJson && responseJson["allPeople"]){
-            this.setState({people: responseJson["allPeople"]});
-        }
-      }).catch(error => {
-          console.error(error);
-      })
+
+    axios.get(config.api + "/people", {withCredentials: true}).then(res => {
+      if(res.data && res.data["allPeople"]){
+        this.setState({people: res.data["allPeople"]});
+        
+      }
+  
+    })
 
   }
 
