@@ -8,8 +8,10 @@ const cookieParser = require("cookie-parser");
 const secret = "temp"; //TODO: Obviously this changes to a config thing later.
 app.use(cookieParser());
 
+var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000", "http://127.0.0.1:3000"];
+
 app.get("/people", function(req, res) {
-  var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000"];
+  
   var origin = req.headers.origin;
   if(allowedOrigins.indexOf(origin) > -1){
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -46,7 +48,7 @@ app.get("/people", function(req, res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     var newPerson = {};
     newPerson['status'] = "active";
-    newPerson["creationDate"] = Date.now();  //this is new to me, so we'll see what it does
+    newPerson["creationDate"] = Date.now();
     if (req.query.name){
         newPerson['name'] = req.query.name;
     }
@@ -116,12 +118,22 @@ app.get("/people", function(req, res) {
     }
   })
 
+  app.get("/verifytoken", function(req, res) {
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+    var token = req.query.token;
+    jwt.verify(token, secret, function(err, decoded) {
+      if (err) {
+      res.send("Invalid"); } else {
+      res.send("Valid");}
+    });
+  })
+
+
   app.get("/login", function(req, res) {
-    var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000"];
+ 
     var origin = req.headers.origin;
-    if(allowedOrigins.indexOf(origin) > -1){
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    res.setHeader('Access-Control-Allow-Origin', origin);
     console.log("Triggered login");
     res.setHeader("Content-Type", "text/plain");
     res.header('Access-Control-Allow-Credentials', true)
@@ -152,12 +164,13 @@ app.get("/people", function(req, res) {
 
                 //Issue token
 
-                const payload = { username };
+                const payload = { username: username };
                 const token = jwt.sign(payload, secret, {
                   expiresIn: '14d'
                 })
-                res.cookie('token', token, { httpOnly: true })
-                .sendStatus(200); }
+                res.cookie('token', token, { httpOnly: false })
+                .sendStatus(200); 
+                console.log(token);}
             
 
 

@@ -3,6 +3,9 @@ import './App.css';
 import { config } from "./config.js";
 import './css/bootstrap.css';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+var jwt = require('jsonwebtoken');
+
 
 class Login extends React.Component{
     constructor() {
@@ -10,7 +13,9 @@ class Login extends React.Component{
 
     }
   state = {
-    loginResponse: ""
+    loginResponse: "",
+    isLogged: false,
+    username: ""
   };
 
   componentDidMount() {
@@ -21,7 +26,13 @@ class Login extends React.Component{
   }
 
   checkLogin(){
-    
+    var token = Cookies.get('token') ? Cookies.get('token') : null;
+    axios.get(config.api + "/verifytoken" + "?token=" + token).then(res => {
+      console.log(res.data);
+
+      //TODO: Change this to get username if valid, or respond 'invalid' if not. Then you can set it all in one go.
+    })
+
   }
 
 
@@ -36,7 +47,6 @@ class Login extends React.Component{
         }
         console.log(res);
     })
-
 
   }
 
@@ -55,11 +65,11 @@ class Login extends React.Component{
         <br/><br/>
         <form className="w-25 text-center" style={{margin: "0 auto"}} onSubmit={this.submitLogin.bind(this)}>
         <div className="form-group">
-          <label for="username">Username or Email Address</label>
+          <label htmlFor="username">Username or Email Address</label>
           <input type="text" className="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email" />
         </div>
         <div className="form-group">
-          <label for="password">Password</label>
+          <label htmlFor="password">Password</label>
           <input type="password" className="form-control" id="password" placeholder="Password" />
         </div> 
         <button className="btn btn-primary" type="submit">Log In</button>
