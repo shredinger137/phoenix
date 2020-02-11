@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css';
+import { config } from "./config.js";
+import axios from 'axios';
 
 class Practices extends React.Component{
     constructor() {
@@ -13,20 +15,20 @@ class Practices extends React.Component{
 
   componentDidMount() {
     this.loadPeople();
-    const _this = this;
   }
 
   componentDidUpdate(prevProps, prevState) {
   }
 
   loadPeople = () => {
-      fetch("http://localhost:3001/people").then(response => response.json()).then(responseJson => {
-        if(responseJson && responseJson["allPeople"]){
-            this.setState({people: responseJson["allPeople"]});
-        }
-      }).catch(error => {
-          console.error(error);
-      })
+
+    axios.get(config.api + "/people", {withCredentials: true}).then(res => {
+      if(res.data && res.data["allPeople"]){
+        this.setState({people: res.data["allPeople"]});
+        
+      }
+  
+    })
 
   }
 
@@ -37,17 +39,17 @@ class Practices extends React.Component{
         document.getElementById("newPerson").value = "";
     }
 
-    fetch("http://localhost:3001/addperson?name=" + person).then(data => {
+    fetch(config.api + "/addperson?name=" + person).then(data => {
         this.loadPeople(); });
   }
 
   removePerson(id){
-    fetch("http://localhost:3001/removeperson?id=" + id).then(data => {
+    fetch(config.api + "/removeperson?id=" + id).then(data => {
         this.loadPeople(); });
   }
 
   undelete(id){
-    fetch("http://localhost:3001/removeperson?id=" + id + "&action=undelete").then(data => {
+    fetch(config.api + "/removeperson?id=" + id + "&action=undelete").then(data => {
         this.loadPeople(); });
   }
 
