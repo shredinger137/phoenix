@@ -3,7 +3,7 @@ import './App.css';
 import { config } from "./config.js";
 import axios from 'axios';
 
-class People extends React.Component{
+class RollCall extends React.Component{
     constructor() {
         super();
         this.loadPeople = this.loadPeople.bind(this);
@@ -94,7 +94,7 @@ class People extends React.Component{
 }
 }
 
-export default People;
+export default RollCall;
 
 /*         {this.state.people.map(person =>
                 <p key={person.name}>{person.name}<br/></p>
