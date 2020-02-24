@@ -1,0 +1,59 @@
+p, span, h1, h2, h3, h4, button {
+    color: white;
+    font-family: Merriweather,sans-serif;
+
+}
+
+body {
+    background-color: #212121;
+}
+
+.main {
+    margin-top: 25px;
+}
+
+.login {
+    width: 25vw;
+}
+
+.button1 {
+    color: black;
+    display: inline-block;
+    padding: 0.3em 1.2em;
+    margin: 0 0.3em 0.3em 0;
+    border-radius: 2em;
+    box-sizing: border-box;
+    text-decoration: none;
+    background-color: #4eb5f1;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.button1:hover {
+    background-color:#4095c6;
+}
+
+table {
+    table-layout: fixed;
+    vertical-align: center;
+}
+
+
+@media screen and (max-width: 992px) {
+
+    .login {
+        width: 90vw;
+    }
+
+    table, tr {
+        width: 100vw;
+    }
+
+    .button1 {
+        display: block;
+        margin: 0.2em auto;
+    }
+
+
+
+  }

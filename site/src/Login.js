@@ -4,14 +4,12 @@ import { config } from "./config.js";
 import './css/bootstrap.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import './css/common.css';
 var jwt = require('jsonwebtoken');
 
 
-class Login extends React.Component{
-    constructor() {
-        super();
 
-    }
+class Login extends React.Component{
   state = {
     loginResponse: "",
     isLogged: false,
@@ -20,6 +18,8 @@ class Login extends React.Component{
 
   componentDidMount() {
     this.checkLogin();
+
+ // console.log(jwt.decode(Cookies.get("token")).username);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -28,9 +28,12 @@ class Login extends React.Component{
   checkLogin(){
     var token = Cookies.get('token') ? Cookies.get('token') : null;
     axios.get(config.api + "/verifytoken" + "?token=" + token).then(res => {
-      console.log(res.data);
+      if(res.data === "Valid" && jwt.decode(token) && jwt.decode(token)['username']){ 
+        console.log("Login: found and validated token");
+        window.location.href = '/dashboard';
+      } else {console.log("Login: Did not find valid token"); }
 
-      //TODO: Change this to get username if valid, or respond 'invalid' if not. Then you can set it all in one go.
+      //TODO: Change this to only check token validity, then redirect to 'App' wrapper. That's where we'll pull the username.
     })
 
   }
@@ -44,8 +47,9 @@ class Login extends React.Component{
     axios.get(config.api + "/login?username=" + username + "&password=" + password, {withCredentials: true}).then(res => {
       if(res && res.data && res.data.result){
         this.setState({loginResponse: res.data.result});
+        this.checkLogin();
         }
-        console.log(res);
+        console.log(res.data.result);
     })
 
   }
@@ -59,20 +63,21 @@ class Login extends React.Component{
     
     <div className="App">
         <header>
-            <h1>Phoenix: Login</h1>
+          <br />
+            <h1>Login</h1>
         </header>
         <p>{this.state.loginResponse}</p>
         <br/><br/>
-        <form className="w-25 text-center" style={{margin: "0 auto"}} onSubmit={this.submitLogin.bind(this)}>
+        <form className="login text-center" style={{margin: "0 auto"}} onSubmit={this.submitLogin.bind(this)}>
         <div className="form-group">
           <label htmlFor="username">Username or Email Address</label>
-          <input type="text" className="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email" />
+          <input type="text" name="username" className="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter email" />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password</label>
-          <input type="password" className="form-control" id="password" placeholder="Password" />
+          <input type="password" name="password" className="form-control" id="password" placeholder="Password" />
         </div> 
-        <button className="btn btn-primary" type="submit">Log In</button>
+        <input className="btn btn-primary" type="submit" value="Log In"></input>
       </form>
       
       

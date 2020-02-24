@@ -1,6 +1,6 @@
 import React from 'react';
-import './App.css';
-import { config } from "./config.js";
+import '../App.css';
+import { config } from "../config.js";
 import axios from 'axios';
 
 class People extends React.Component{
@@ -77,7 +77,8 @@ class People extends React.Component{
                     <p key={person._id}>{person.status}</p>  
                   </td>
                   <td>
-                    <button onClick={() => this.removePerson(person._id)}>Delete</button><button onClick={() => this.undelete(person._id)}>Make Active</button>
+                    <button className="button1" onClick={() => this.removePerson(person._id)}>Delete</button>
+                    <button className="button1" onClick={() => this.undelete(person._id)}>Undelete</button>
                   </td>
                 </tr>
             )

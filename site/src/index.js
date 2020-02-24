@@ -1,22 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { Route, BrowserRouter as Router } from 'react-router-dom'
-import People from './People'
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import Login from './Login'
+import Phoenix from './App'
 
 const routing = (
     <Router>
       <div>
+        <Switch>
         <Route exact path="/">
           <Login />
         </Route>
-        <Route path ="/login">
-          <Login />
+        <Route path="/">
+          <Phoenix />
         </Route>
-        <Route path ="/people">
-          <People />
-        </Route>
+        </Switch>
+        
       </div>
     </Router>
   )

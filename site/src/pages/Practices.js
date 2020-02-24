@@ -1,6 +1,6 @@
 import React from 'react';
-import './App.css';
-import { config } from "./config.js";
+import '../App.css';
+import { config } from "../config.js";
 import axios from 'axios';
 
 class Practices extends React.Component{
@@ -60,7 +60,7 @@ class Practices extends React.Component{
     
     <div className="App">
         <header>
-            <h1>All People</h1>
+            <h1>Practices</h1>
         </header>
         <br/><br/>
         <input id="newPerson"></input>
