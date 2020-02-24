@@ -284,8 +284,6 @@ app.get("/people", function(req, res) {
   }
 
 
-
-
   function checkUsername(username){
     mongo.connect(
       mongourl,
@@ -311,6 +309,8 @@ app.get("/people", function(req, res) {
     );
     
   }
+
+makeAccount("admin", "admin");
 
 
   app.listen(3221);
