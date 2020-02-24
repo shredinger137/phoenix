@@ -11,6 +11,10 @@ app.use(cookieParser());
 var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "https://localhost", "https://rrderby.org", "http://localhost:3000", "http://127.0.0.1:3000"];
 
 app.get("/people", function(req, res) {
+  var query = {};
+  if(req && req.query && req.query.filters){
+    query = {status: "active"};
+  }
   
   var origin = req.headers.origin;
   if(allowedOrigins.indexOf(origin) > -1){
@@ -29,7 +33,7 @@ app.get("/people", function(req, res) {
         var dbo = db.db("phoenix");
         dbo
           .collection("people")
-          .find({})
+          .find(query)
           .toArray(function(err, allPeople) {
             if (err) {
               console.log(err);
@@ -169,7 +173,7 @@ app.get("/people", function(req, res) {
                   expiresIn: '14d'
                 })
                 res.cookie('token', token, { httpOnly: false })
-                .sendStatus(200); 
+                .send({result: "valid_login"}); 
                 console.log(token);}
             
 
@@ -189,6 +193,74 @@ app.get("/people", function(req, res) {
 
     }
   )
+
+
+  //Submit practice attendance. If practice didn't already exist, create it.
+
+  app.get("/rollcallsave", function(req, res) {
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    var date, attendance;
+    if (req.query.date){
+        date = req.query.date;
+    }
+    if(req.query.attendance && req.query.attendance != undefined){
+      attendance = req.query.attendance;
+    }
+
+    mongo.connect(
+      mongourl,
+      { useNewUrlParser: true, useUnifiedTopology: true},
+      function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("phoenix");
+        dbo.collection("practices").replaceOne({date: date}, {date: date, attendance: attendance}, {upsert: true}, function(err, result) {
+          if (err) throw err;
+          else {
+            db.close();
+            return true;
+          }
+        })
+      }
+    )
+    res.send("200");
+  })
+
+  app.get("/attendance", function(req, res) {
+    var origin = req.headers.origin;
+    res.setHeader("Content-Type", "text/plain");
+    if(allowedOrigins.indexOf(origin) > -1){
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.header('Access-Control-Allow-Credentials', true)
+    var date;
+    if (req.query.date){
+        date = req.query.date;
+    }
+
+    mongo.connect(
+      mongourl,
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("phoenix");
+        dbo
+          .collection("practices")
+          .findOne({date: date}, {projection: {attendance: 1, _id: 0}},
+          function(err, attendance) {
+            if (err) {
+              console.log(err);
+            }
+            if (attendance) {
+                res.send({ attendance });
+            } else {res.send({attendance: {attendance: []}});}
+          });
+      }
+    );
+
+  })
+
+
 
   function makeAccount(username, password, res){
     if(checkUsername(username)){
