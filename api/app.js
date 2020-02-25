@@ -54,7 +54,7 @@ app.get("/people", function(req, res) {
         res.setHeader('Access-Control-Allow-Origin', origin);
       }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", origin);
+    
     var newPerson = {};
     newPerson['status'] = "active";
     newPerson["creationDate"] = Date.now();
