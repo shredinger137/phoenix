@@ -115,7 +115,7 @@ app.get("/people", function(req, res) {
     var username, password
     if (req.query.username && req.query.password){
         username = req.query.username;
-        password = passwordHash.generate(req.query.password);
+        password = req.query.password;
         if(makeAccount(username, password, res)){
           res.send("200");
         } else { res.send("100");}
@@ -260,17 +260,20 @@ app.get("/people", function(req, res) {
 
   })
 
-
+//TODO: You didn't finish account creation. You have to do this in order to
+//have the admin account work for testing. And also because it seems like an
+//important function.
 
   function makeAccount(username, password, res){
-    if(checkUsername(username)){
+
+      var passwordHashed = passwordHash.generate(password);
       mongo.connect(
         mongourl,
         { useNewUrlParser: true, useUnifiedTopology: true },
         function(err, db) {
           if (err) throw err;
           var dbo = db.db("phoenix");
-          dbo.collection("accounts").insertOne({username: username, password: password}, function(err, result) {
+          dbo.collection("accounts").replaceOne({username: username}, {username: username, password: passwordHashed}, {upsert: true}, function(err, result) {
               if (err) throw err;
               else {
                   db.close();
@@ -280,9 +283,8 @@ app.get("/people", function(req, res) {
         }
       );
     });
+  
   }
-  }
-
 
   function checkUsername(username){
     mongo.connect(
@@ -313,4 +315,4 @@ app.get("/people", function(req, res) {
 makeAccount("admin", "admin");
 
 
-  app.listen(3221);
+app.listen(3221);
