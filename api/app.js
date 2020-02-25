@@ -17,9 +17,10 @@ app.get("/people", function(req, res) {
   }
   
   var origin = req.headers.origin;
-  if(allowedOrigins.indexOf(origin) > -1){
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+  if(req.headers.origin && req.headers.origin != undefined){
+    if(allowedOrigins.indexOf(origin) > -1){
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
   res.header('Access-Control-Allow-Credentials', true)
 
     if(req.cookies || req.signedCookies){ console.log("token")}
@@ -47,9 +48,13 @@ app.get("/people", function(req, res) {
   });
 
   app.get("/addperson", function(req, res) {
-    console.log("addperson");
+    var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", origin);
     var newPerson = {};
     newPerson['status'] = "active";
     newPerson["creationDate"] = Date.now();
@@ -78,9 +83,13 @@ app.get("/people", function(req, res) {
   //Includes delete and undelete
 
   app.get("/removeperson", function(req, res) {
-    console.log("delete");
+    var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", origin);
     var id;
     if (req.query.id){
         id = new mongo.ObjectID(req.query.id);
@@ -110,8 +119,14 @@ app.get("/people", function(req, res) {
   })
 
   app.get("/registeraccount", function(req, res) {
+    var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
+
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "*");
+
     var username, password
     if (req.query.username && req.query.password){
         username = req.query.username;
@@ -123,8 +138,13 @@ app.get("/people", function(req, res) {
   })
 
   app.get("/verifytoken", function(req, res) {
+    var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+
     var token = req.query.token;
     jwt.verify(token, secret, function(err, decoded) {
       if (err) {
@@ -135,8 +155,11 @@ app.get("/people", function(req, res) {
 
 
   app.get("/login", function(req, res) {
- 
     var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader('Access-Control-Allow-Origin', origin);
     console.log("Triggered login");
     res.setHeader("Content-Type", "text/plain");
@@ -198,8 +221,12 @@ app.get("/people", function(req, res) {
   //Submit practice attendance. If practice didn't already exist, create it.
 
   app.get("/rollcallsave", function(req, res) {
+    var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader("Content-Type", "text/plain");
-    res.setHeader("Access-Control-Allow-Origin", "*");
     var date, attendance;
     if (req.query.date){
         date = req.query.date;
@@ -228,11 +255,11 @@ app.get("/people", function(req, res) {
 
   app.get("/attendance", function(req, res) {
     var origin = req.headers.origin;
+    if(req.headers.origin && req.headers.origin != undefined){
+      if(allowedOrigins.indexOf(origin) > -1){
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
     res.setHeader("Content-Type", "text/plain");
-    if(allowedOrigins.indexOf(origin) > -1){
-      res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    res.header('Access-Control-Allow-Credentials', true)
     var date;
     if (req.query.date){
         date = req.query.date;
@@ -260,9 +287,6 @@ app.get("/people", function(req, res) {
 
   })
 
-//TODO: You didn't finish account creation. You have to do this in order to
-//have the admin account work for testing. And also because it seems like an
-//important function.
 
   function makeAccount(username, password, res){
 
