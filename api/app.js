@@ -160,7 +160,7 @@ app.get("/people", function(req, res) {
       if(allowedOrigins.indexOf(origin) > -1){
         res.setHeader('Access-Control-Allow-Origin', origin);
       }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
-    res.setHeader('Access-Control-Allow-Origin', origin);
+
     console.log("Triggered login");
     res.setHeader("Content-Type", "text/plain");
     res.header('Access-Control-Allow-Credentials', true)
