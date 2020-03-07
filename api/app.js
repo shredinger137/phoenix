@@ -4,6 +4,66 @@ var app = express();
 var mongourl = "mongodb://localhost:27017";
 var passwordHash = require('password-hash');
 var jwt = require('jsonwebtoken');
+var {google} = require('googleapis');
+let sheets = google.sheets('v4');
+//Google Sheets
+
+let spreadsheetId = '1jOCZrMds1YkUW8_TXHCX6jU3hfIAjxmRFta5R57zRSU';
+
+let privatekey = require("./credentials.json");
+// configure a JWT auth client
+let jwtClient = new google.auth.JWT(
+  privatekey.client_email,
+  null,
+  privatekey.private_key,
+  ['https://www.googleapis.com/auth/spreadsheets',
+   'https://www.googleapis.com/auth/drive',
+   'https://www.googleapis.com/auth/calendar']);
+//authenticate request
+jwtClient.authorize(function (err, tokens) {
+if (err) {
+console.log(err);
+return;
+} else {
+console.log("Google connected");
+}
+});
+
+async function writeToSheet (sheetid, data) {
+  const authClient = jwtClient;
+  const request = {
+    // The ID of the spreadsheet to update.
+    spreadsheetId: sheetid,  // TODO: Update placeholder value.
+
+    // The A1 notation of the values to update.
+    range: 'A1:A3',  // TODO: Update placeholder value.
+
+    // How the input data should be interpreted.
+    valueInputOption: 'RAW',  // TODO: Update placeholder value.
+
+    resource: {
+      "majorDimension": 'COLUMNS',
+      "values": data
+    },
+
+    auth: authClient,
+  };
+
+  try {
+    const response = (await sheets.spreadsheets.values.update(request)).data;
+    // TODO: Change code below to process the `response` object:
+    console.log(JSON.stringify(response, null, 2));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+var writetest = [
+  ["24", "3"],
+];
+//writeToSheet(spreadsheetId, writetest);
+
+
 const cookieParser = require("cookie-parser");
 const secret = "temp"; //TODO: Obviously this changes to a config thing later.
 app.use(cookieParser());
@@ -21,7 +81,8 @@ app.get("/people", function(req, res) {
     if(allowedOrigins.indexOf(origin) > -1){
       res.setHeader('Access-Control-Allow-Origin', origin);
     }} else {res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
-  res.header('Access-Control-Allow-Credentials', true)
+  res.he
+  der('Access-Control-Allow-Credentials', true)
 
     if(req.cookies || req.signedCookies){ console.log("token")}
 
@@ -335,6 +396,23 @@ app.get("/people", function(req, res) {
     );
     
   }
+
+
+
+//****************************
+//Google Sheets
+//****************************
+
+
+
+
+
+
+
+//****************************
+//Initial run, listen
+//****************************
+
 
 makeAccount("admin", "admin");
 
