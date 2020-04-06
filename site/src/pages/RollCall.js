@@ -126,6 +126,7 @@ class RollCall extends React.Component{
     }
     console.log(config.api + "/rollcallsave?date=" + date + arrayString);
     fetch(config.api + "/rollcallsave?date=" + date + arrayString);
+    fetch(config.api + "/export");
   }
 
 

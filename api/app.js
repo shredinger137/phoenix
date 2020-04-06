@@ -29,6 +29,7 @@ jwtClient.authorize(function (err, tokens) {
   }
 });
 
+//getPracticeAttendanceAndWrite();
 
 function getPracticeAttendanceAndWrite() {
   var allData = [];
@@ -48,19 +49,16 @@ function getPracticeAttendanceAndWrite() {
       for(practice of practices){
         holder = [practice.date];
         for(person of playerList){
-          if(practice.attendance.indexOf(person) > -1){
+          if(practice && practice.attendance && practice.attendance.indexOf(person) > -1){
             holder.push("Present");
           } else {holder.push("No");}
         }
-        console.log(holder);
-        allData.push(holder);
-        console.log("pushed");
-        
+        allData.push(holder);  
       }
-      console.log(allData);
+      writeToSheet(spreadsheetId, allData);
     })
 
-   writeToSheet(spreadsheetId, allData);
+ 
 
   });
   
@@ -71,6 +69,7 @@ function getPracticeAttendanceAndWrite() {
 
 
 async function writeToSheet(sheetid, data) {
+  console.log(data);
   var columnLength = data.length;
   var columnHeight = data[0].length; //we hope there are always the same number of rows
 
@@ -317,8 +316,22 @@ app.get("/login", function (req, res) {
 }
 )
 
+app.get("/export", function(req,res){
+  var origin = req.headers.origin;
+  if (req.headers.origin && req.headers.origin != undefined) {
+    if (allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  }
+  getPracticeAttendanceAndWrite();
+  console.log("export");
+  res.send("200");
+
+})
+
 
 //Submit practice attendance. If practice didn't already exist, create it.
+
 
 app.get("/rollcallsave", function (req, res) {
   var origin = req.headers.origin;
@@ -346,13 +359,14 @@ app.get("/rollcallsave", function (req, res) {
         if (err) throw err;
         else {
           db.close();
+          
           return true;
         }
       })
     }
   )
   res.send("200");
-  getPracticeAttendanceAndWrite();
+  
 })
 
 app.get("/attendance", function (req, res) {
