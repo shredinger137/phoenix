@@ -20,6 +20,7 @@ log() {
  
   render() {
     return (
+     
     <div className="menu-wrapper">
       <span className="user">{this.props.username}</span>
       <ul>
