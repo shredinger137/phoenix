@@ -69,6 +69,11 @@ class People extends React.Component{
         <br/><br/>
         <div>
           <table>
+            <tr>
+              <th><span className="strongText">Name</span></th>
+              <th><span className="strongText">Status</span></th>
+
+            </tr>
             {this.state.people.map(person => 
                 <tr>
                   <td>
@@ -78,8 +83,8 @@ class People extends React.Component{
                     <span key={person._id} className="strongText">{person.status}</span>  
                   </td>
                   <td>
-                    <button className="button1" onClick={() => this.removePerson(person._id)}>Delete</button>
-                    <button className="button1" onClick={() => this.undelete(person._id)}>Undelete</button>
+                    <button className={person.status == "active" ? "button1" : "button1 disabled"} onClick={() => this.removePerson(person._id)}>Delete</button>
+                    <button className={person.status != "active" ? "button1" : "button1 disabled"} onClick={() => this.undelete(person._id)}>Undelete</button>
                   </td>
                 </tr>
             )

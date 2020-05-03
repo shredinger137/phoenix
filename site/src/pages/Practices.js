@@ -64,8 +64,9 @@ class Practices extends React.Component{
             <h1>Practices</h1>
         </header>
         <br/><br/>
-        <input id="newPerson"></input>
-        <button onClick={this.addPerson.bind(this)}>Add Person</button>
+        <input type="date" id="newPerson"></input>
+        <button onClick={this.addPerson.bind(this)} className="button1">Add Practice</button>
+        <p>(this button doesn't do anything yet)</p>
         <br/><br/>
         <div>
           <table>

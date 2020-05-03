@@ -391,6 +391,7 @@ app.get("/attendance", function (req, res) {
     }
   } else { res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
   res.setHeader("Content-Type", "text/plain");
+  res.header('Access-Control-Allow-Credentials', true)
   var date;
   if (req.query.date) {
     date = req.query.date;

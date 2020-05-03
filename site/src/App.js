@@ -29,7 +29,7 @@ class Phoenix extends React.Component{
 
 
   componentDidMount() {
-
+    this.checkLogin();
   }
 
   componentDidUpdate() {
