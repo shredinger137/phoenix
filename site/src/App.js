@@ -9,9 +9,16 @@ import RollCall from './pages/RollCall';
 import Practices from './pages/Practices';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import Login from './Login';
 var jwt = require('jsonwebtoken');
 
 class Phoenix extends React.Component{
+
+  constructor(props) {
+    super(props);
+      this.checkLogin = this.checkLogin.bind(this);
+    
+  }
 
   state = {
     people: "Test",
@@ -19,12 +26,14 @@ class Phoenix extends React.Component{
     isLogged: null
   };
 
+
+
   componentDidMount() {
-    console.log(this.checkLogin());
+
   }
 
   componentDidUpdate() {
-
+    this.checkLogin();
   }
 
   
@@ -64,9 +73,11 @@ logOut(){
     <div className="App">
       <div className="header">
         <div className="center">
-         <Menu username = {this.state.username} logOut = {this.logOut}/></div>
+        {this.state.isLogged ? <Menu username = {this.state.username} logOut = {this.logOut}/> : "" }
+         </div>
       </div>
     <div className="main">
+      {this.state.isLogged ? 
     <Switch>
           <Route path="/people">
             <People />
@@ -80,7 +91,9 @@ logOut(){
           <Route path="/">
             <RollCall />
           </Route>
-        </Switch>
+        </Switch> : 
+        
+         <Login checkLogin = {this.checkLogin} /> }
 
     </div>
   </div>)

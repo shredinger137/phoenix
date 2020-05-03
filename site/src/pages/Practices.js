@@ -10,7 +10,7 @@ class Practices extends React.Component{
         this.removePerson = this.removePerson.bind(this);
     }
   state = {
-    people: []
+    practices: []
   };
 
   componentDidMount() {
@@ -22,9 +22,10 @@ class Practices extends React.Component{
 
   loadPeople = () => {
 
-    axios.get(config.api + "/people", {withCredentials: true}).then(res => {
-      if(res.data && res.data["allPeople"]){
-        this.setState({people: res.data["allPeople"]});
+    axios.get(config.api + "/practices", {withCredentials: true}).then(res => {
+      if(res.data){
+        this.setState({practices: res.data});
+        console.log(res.data);
         
       }
   
@@ -68,17 +69,15 @@ class Practices extends React.Component{
         <br/><br/>
         <div>
           <table>
-            {this.state.people.map(person => 
+            {this.state.practices.map(practice => 
                 <tr>
                   <td>
-                    <p key={person.name}>{person.name}</p>
+                    <p key={practice.date}>{practice.date}</p>
                   </td>
                   <td>
-                    <p key={person._id}>{person.status}</p>  
+                    <p></p>  
                   </td>
-                  <td>
-                    <button onClick={() => this.removePerson(person._id)}>Delete</button><button onClick={() => this.undelete(person._id)}>Make Active</button>
-                  </td>
+
                 </tr>
             )
 

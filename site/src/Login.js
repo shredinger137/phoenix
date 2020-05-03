@@ -18,8 +18,6 @@ class Login extends React.Component{
 
   componentDidMount() {
     this.checkLogin();
-
- // console.log(jwt.decode(Cookies.get("token")).username);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -30,7 +28,8 @@ class Login extends React.Component{
     axios.get(config.api + "/verifytoken" + "?token=" + token).then(res => {
       if(res.data === "Valid" && jwt.decode(token) && jwt.decode(token)['username']){ 
         console.log("Login: found and validated token");
-        window.location.href = '/dashboard';
+        //window.location.href = '/dashboard';
+        console.log(window.location.href);
       } else {console.log("Login: Did not find valid token"); }
 
       //TODO: Change this to only check token validity, then redirect to 'App' wrapper. That's where we'll pull the username.
@@ -47,7 +46,7 @@ class Login extends React.Component{
     axios.get(config.api + "/login?username=" + username + "&password=" + password, {withCredentials: true}).then(res => {
       if(res && res.data && res.data.result){
         this.setState({loginResponse: res.data.result});
-        this.checkLogin();
+        this.props.checkLogin();
         }
         console.log(res.data.result);
     })

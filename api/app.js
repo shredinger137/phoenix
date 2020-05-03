@@ -126,6 +126,20 @@ app.get("/people", function (req, res) {
 
 });
 
+app.get("/practices", function(req, res){
+  var origin = req.headers.origin;
+  if (req.headers.origin && req.headers.origin != undefined) {
+    if (allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  } else { res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
+  res.setHeader("Content-Type", "text/plain");
+  res.header('Access-Control-Allow-Credentials', true)
+
+  getPractices().then(practices => res.send(practices) )
+
+});
+
 async function getPeople(query) {
   var db = await mongo.connect(mongourl);
   var dbo = db.db("phoenix");

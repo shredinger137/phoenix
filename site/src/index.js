@@ -5,13 +5,12 @@ import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
 import Login from './Login'
 import Phoenix from './App'
 
+//Routing is gone
+
 const routing = (
     <Router>
       <div>
         <Switch>
-        <Route exact path="/">
-          <Login />
-        </Route>
         <Route path="/">
           <Phoenix />
         </Route>

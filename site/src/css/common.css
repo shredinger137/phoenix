@@ -8,6 +8,10 @@ body {
     background-color: #212121;
 }
 
+.strongText {
+    font-size: 1.2rem;
+}
+
 .main {
     margin-top: 25px;
 }
@@ -16,26 +20,42 @@ body {
     width: 25vw;
 }
 
+input {
+    background-color: #c9c9c9;
+    margin-right: 10px;
+}
+
 .button1 {
-    color: black;
+    background-color: black;
     display: inline-block;
-    padding: 0.3em 1.2em;
-    margin: 0 0.3em 0.3em 0;
-    border-radius: 2em;
+    padding: 0.35em 1.2em;
+    border: 0.1em solid #FFFFFF;
+    margin:0 0.3em 0.3em 0;
+    border-radius:0.12em;
     box-sizing: border-box;
     text-decoration: none;
-    background-color: #4eb5f1;
+    color: #FFFFFF;
     text-align: center;
     transition: all 0.2s;
 }
 
 .button1:hover {
-    background-color:#4095c6;
+    background-color: #2E2E2E;
+   
 }
 
 table {
-    table-layout: fixed;
-    vertical-align: center;
+    border-spacing: 100px;    
+}
+
+td {
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+tr {
+    margin-bottom: 10px;
 }
 
 
