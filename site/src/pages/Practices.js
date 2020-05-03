@@ -54,6 +54,8 @@ class Practices extends React.Component{
         this.loadPeople(); });
   }
 
+  
+
 
 
   render() {
@@ -64,16 +66,12 @@ class Practices extends React.Component{
             <h1>Practices</h1>
         </header>
         <br/><br/>
-        <input type="date" id="newPerson"></input>
-        <button onClick={this.addPerson.bind(this)} className="button1">Add Practice</button>
-        <p>(this button doesn't do anything yet)</p>
-        <br/><br/>
         <div>
           <table>
             {this.state.practices.map(practice => 
                 <tr>
                   <td>
-                    <p key={practice.date}>{practice.date}</p>
+                    <p key={practice.date}><a href={"/rollcall?date=" +  encodeURI(practice.date)}>{practice.date}</a></p>
                   </td>
                   <td>
                     <p></p>  

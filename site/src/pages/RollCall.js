@@ -65,14 +65,29 @@ class RollCall extends React.Component {
   }
 
   initDate() {
-    var d = new Date(),
-      month = '' + (d.getMonth() + 1),
+    const params = new URLSearchParams(window.location.search);
+    if(params && params.get("date")){
+
+    //this is extremely specific to our format, which should be 
+    //configurable if we want it to be regional; also, we shouldn't be displaying year
+    //all the time, not usually needed
+
+      var d = params.get("date").split('-');
+      var month = d[1];
+      var day = d[2];
+      var year = d[0];
+
+    } else {var d = new Date();
+    
+      var month = '' + (d.getMonth() + 1),
       day = '' + d.getDate(),
       year = d.getFullYear();
+    
     if (month.length < 2)
       month = '0' + month;
     if (day.length < 2)
       day = '0' + day;
+    }
     document.getElementById('date').value = [year, month, day].join('-');
 
 
