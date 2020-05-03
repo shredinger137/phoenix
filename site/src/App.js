@@ -10,6 +10,7 @@ import Practices from './pages/Practices';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import Login from './Login';
+import Settings from './pages/Settings';
 var jwt = require('jsonwebtoken');
 
 class Phoenix extends React.Component{
@@ -59,7 +60,6 @@ logOut(){
       var eqPos = cookie.indexOf("=");
       var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
       document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      console.log("Logout");
       window.location.href = '/';
   }
   
@@ -87,6 +87,9 @@ logOut(){
           </Route>
           <Route path="/practices">
             <Practices />
+          </Route>
+          <Route path="/settings">
+            <Settings />
           </Route>
           <Route path="/">
             <RollCall />

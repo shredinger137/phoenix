@@ -144,8 +144,8 @@ class RollCall extends React.Component {
           <h1>Roll Call</h1>
         </header>
         <div className="contextMenu">
-          <button className="button1" onClick={this.handleSave.bind(this)}>Save</button>
           <input type="date" id="date" onChange={this.loadAttendance.bind(this)}></input>
+          <button className="button1" onClick={this.handleSave.bind(this)}>Save</button>
         </div>
         <br /><br />
         <input id="newPerson"></input>
@@ -182,7 +182,3 @@ class RollCall extends React.Component {
 }
 
 export default RollCall;
-
-/*         {this.state.people.map(person =>
-                <p key={person.name}>{person.name}<br/></p>
-            )} */

@@ -25,7 +25,7 @@ jwtClient.authorize(function (err, tokens) {
     console.log(err);
     return;
   } else {
-    console.log("Google connected");
+    //console.log("Google connected");
   }
 });
 
@@ -69,11 +69,10 @@ function getPracticeAttendanceAndWrite() {
 
 
 async function writeToSheet(sheetid, data) {
-  console.log(data);
   var columnLength = data.length;
   var columnHeight = data[0].length; //we hope there are always the same number of rows
+//This can be updated to get a real range later, if we like
 
-  console.log("Column: " + columnLength);
   const authClient = jwtClient;
   const request = {
     spreadsheetId: sheetid,
@@ -92,7 +91,7 @@ async function writeToSheet(sheetid, data) {
   try {
     const response = (await sheets.spreadsheets.values.update(request)).data;
     // TODO: Change code below to process the `response` object:
-    console.log(JSON.stringify(response, null, 2));
+   // console.log(JSON.stringify(response, null, 2));
   } catch (err) {
     console.error(err);
   }
@@ -217,7 +216,7 @@ app.get("/removeperson", function (req, res) {
         if (err) throw err;
         else {
           res.send("200");
-          console.log(id);
+        //  console.log(id);
         }
         db.close();
       }
@@ -273,7 +272,6 @@ app.get("/login", function (req, res) {
     }
   } else { res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
 
-  console.log("Triggered login");
   res.setHeader("Content-Type", "text/plain");
   res.header('Access-Control-Allow-Credentials', true)
   res.header(
@@ -309,7 +307,6 @@ app.get("/login", function (req, res) {
               })
               res.cookie('token', token, { httpOnly: false })
                 .send({ result: "valid_login" });
-              console.log(token);
             }
 
 
@@ -338,7 +335,7 @@ app.get("/export", function(req,res){
     }
   }
   getPracticeAttendanceAndWrite();
-  console.log("export");
+  //console.log("export");
   res.send("200");
 
 })
