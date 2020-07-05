@@ -34,7 +34,7 @@ class Phoenix extends React.Component{
   }
 
   componentDidUpdate() {
-    this.checkLogin();
+
   }
 
   
@@ -73,7 +73,9 @@ logOut(){
     <div className="App">
       <div className="header">
         <div className="center">
-        {this.state.isLogged ? <Menu username = {this.state.username} logOut = {this.logOut}/> : "" }
+        {this.state.isLogged ?
+          <Menu username = {this.state.username} logOut = {this.logOut}/> : "" 
+        }
          </div>
       </div>
     <div className="main">
