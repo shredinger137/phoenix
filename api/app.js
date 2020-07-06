@@ -6,6 +6,27 @@ var passwordHash = require('password-hash');
 var jwt = require('jsonwebtoken');
 var { google } = require('googleapis');
 let sheets = google.sheets('v4');
+var MongoClient = require('mongodb').MongoClient, Server = require('mongodb').Server;
+ObjectID = require('mongodb').ObjectID;
+
+//Create a global holder for our database instance, then open the database and assign it here.
+//Note that anywhere you use this, you need to have an if(dbConnection){} conditional so that the
+//order will only attempt to run if the database connection exists. Later you might want to add a
+//retry deal to it.
+
+var dbConnection = null;
+MongoClient.connect(mongourl, { useUnifiedTopology: true, useNewUrlParser: true }, function (err, client) {
+    if (err) { console.error(err) }
+    dbConnection = client.db('phoenix') // once connected, assign the connection to the global variable
+    connectedToDatabase = true;
+    console.log("Connected to Database");
+
+    //things that happen on startup should happen here, after the database connects
+
+})
+
+
+
 //Google Sheets
 
 let spreadsheetId = '1jOCZrMds1YkUW8_TXHCX6jU3hfIAjxmRFta5R57zRSU';
@@ -36,8 +57,8 @@ function getPracticeAttendanceAndWrite() {
   var firstColumn = ["Name"];
   var playerList = [];
   var holder = [];
-  getPeople({status: "active"}).then(people => {
-    for(person of people){
+  getPeople({ status: "active" }).then(people => {
+    for (person of people) {
       firstColumn.push(person.name);
     }
 
@@ -46,39 +67,49 @@ function getPracticeAttendanceAndWrite() {
     allData = [firstColumn];
 
     getPractices().then(practices => {
-      for(practice of practices){
+      for (practice of practices) {
         holder = [practice.date];
-        for(person of playerList){
-          if(practice && practice.attendance && practice.attendance.indexOf(person) > -1){
+        for (person of playerList) {
+          if (practice && practice.attendance && practice.attendance.indexOf(person) > -1) {
             holder.push("Present");
-          } else {holder.push("No");}
+          } else { holder.push("No"); }
         }
-        allData.push(holder);  
+        allData.push(holder);
       }
       writeToSheet(spreadsheetId, allData);
     })
 
- 
+
 
   });
-  
+
 
 
 }
 
+async function updatePersonById(id, updatedObject){
+  console.log(id)
+  id = new mongo.ObjectID(id);
+  if(connectedToDatabase){
+    dbConnection.collection("people").updateOne({_id: id}, {$set: updatedObject}, function(err, res){
+      if (err) throw err;
+      console.log("insert")
 
+    } );
+  }
+}
 
 async function writeToSheet(sheetid, data) {
   var columnLength = data.length;
   var columnHeight = data[0].length; //we hope there are always the same number of rows
-//This can be updated to get a real range later, if we like
+  //This can be updated to get a real range later, if we like
 
   const authClient = jwtClient;
   const request = {
     spreadsheetId: sheetid,
-    range: 'A1:Z99',  
+    range: 'A1:Z99',
 
-    valueInputOption: 'RAW', 
+    valueInputOption: 'RAW',
 
     resource: {
       "majorDimension": 'COLUMNS',
@@ -91,7 +122,7 @@ async function writeToSheet(sheetid, data) {
   try {
     const response = (await sheets.spreadsheets.values.update(request)).data;
     // TODO: Change code below to process the `response` object:
-   // console.log(JSON.stringify(response, null, 2));
+    // console.log(JSON.stringify(response, null, 2));
   } catch (err) {
     console.error(err);
   }
@@ -108,8 +139,18 @@ var allowedOrigins = ["https://phoenix.rrderby.org", "https://locahost:3000", "h
 
 app.get("/people", function (req, res) {
   var query = {};
+  //TODO: This filter isn't being used in a real way.
   if (req && req.query && req.query.filters) {
     query = { status: "active" };
+  }
+
+  if (req && req.query && req.query.id) {
+    query = { _id: ObjectID(req.query.id) };
+    //This doesn't work.
+  }
+
+  if (req && req.query) {
+    console.log(req.query);
   }
 
   var origin = req.headers.origin;
@@ -119,13 +160,16 @@ app.get("/people", function (req, res) {
     }
   } else { res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
   res.header('Access-Control-Allow-Credentials', true)
-  if (req.cookies || req.signedCookies) { console.log("token") }
+  if (req.cookies || req.signedCookies) {
+    console.log("token")
+    //TODO: We should actually do something with this token verification.
+  }
   res.setHeader("Content-Type", "text/plain");
-  getPeople().then(people => { res.send({ allPeople: people }) });
+  getPeople(query).then(people => { res.send({ allPeople: people }) });
 
 });
 
-app.get("/practices", function(req, res){
+app.get("/practices", function (req, res) {
   var origin = req.headers.origin;
   if (req.headers.origin && req.headers.origin != undefined) {
     if (allowedOrigins.indexOf(origin) > -1) {
@@ -135,14 +179,16 @@ app.get("/practices", function(req, res){
   res.setHeader("Content-Type", "text/plain");
   res.header('Access-Control-Allow-Credentials', true)
 
-  getPractices().then(practices => res.send(practices) )
+  getPractices().then(practices => res.send(practices))
 
 });
 
 async function getPeople(query) {
-  var db = await mongo.connect(mongourl);
-  var dbo = db.db("phoenix");
-  return await dbo.collection("people").find(query).toArray();
+  if(dbConnection){
+    return await dbConnection.collection("people").find(query).toArray();
+  } else {
+    return false;
+  }
 }
 
 async function getPractices(query) {
@@ -216,12 +262,28 @@ app.get("/removeperson", function (req, res) {
         if (err) throw err;
         else {
           res.send("200");
-        //  console.log(id);
+          //  console.log(id);
         }
         db.close();
       }
       );
     });
+})
+
+app.get("/updateperson", function (req, res) {
+  var origin = req.headers.origin;
+  if (req.headers.origin && req.headers.origin != undefined) {
+    if (allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+  } else { res.setHeader('Access-Control-Allow-Origin', 'https://phoenix.rrderby.org'); }
+
+  res.setHeader("Content-Type", "text/plain");
+  if(req.query && req.query.id && req.query.name){
+    updatePersonById(req.query.id, {name: req.query.name});
+  }
+  //TODO: This doesn't mean anything. We have, like, no error handling.
+  res.send("200");
 })
 
 app.get("/registeraccount", function (req, res) {
@@ -327,7 +389,7 @@ app.get("/login", function (req, res) {
 }
 )
 
-app.get("/export", function(req,res){
+app.get("/export", function (req, res) {
   var origin = req.headers.origin;
   if (req.headers.origin && req.headers.origin != undefined) {
     if (allowedOrigins.indexOf(origin) > -1) {
@@ -370,14 +432,14 @@ app.get("/rollcallsave", function (req, res) {
         if (err) throw err;
         else {
           db.close();
-          
+
           return true;
         }
       })
     }
   )
   res.send("200");
-  
+
 })
 
 app.get("/attendance", function (req, res) {

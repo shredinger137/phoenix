@@ -25,7 +25,7 @@ class People extends React.Component {
   componentDidUpdate(prevProps, prevState) {
   }
 
-  loadPeople = () => {
+  loadPeople() {
 
     axios.get(config.api + "/people", { withCredentials: true }).then(res => {
       if (res.data && res.data["allPeople"]) {
@@ -37,6 +37,7 @@ class People extends React.Component {
     })
 
   }
+
 
   addPerson() {
     var person = "null";
@@ -114,7 +115,13 @@ class People extends React.Component {
 
             }
           </table>
-          {this.state.modalIsOpen ? <EditPerson openModal={this.openModal} closeModal={this.closeModal} id={this.state.editPersonID} /> : <></>}
+          {this.state.modalIsOpen ? 
+            <EditPerson 
+              openModal={this.openModal} 
+              closeModal={this.closeModal} 
+              id={this.state.editPersonID} 
+              allPeople={this.state.people} 
+              loadPeople={this.loadPeople} /> : <></>}
           
         </div>
         <div>
