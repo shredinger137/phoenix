@@ -5,3 +5,4 @@ This app is intended to grow into a more comprehensive league management app as 
 
 The advantage of this method is that it can be used as a tool for officials responsible for tracking attendance, without the buy in or overhead of having an entire league become end users.
  
+Relies on React, Node.js, Express and MongoDB to function. Not set up for multitenancy use at this time. If we decide to release a version of it that is, that will have to be integrated later.
