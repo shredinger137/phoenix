@@ -1,5 +1,5 @@
 .rollCallTable td {
-    padding: 5px 15px 5px 15px;
+   /* padding: 5px 15px 5px 15px; */
     vertical-align: center;
 
 }
@@ -24,24 +24,27 @@
   
   /* The slider */
   .slider {
+    z-index: 1;
     position: absolute;
     cursor: pointer;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    height: 27px;
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
   }
   
   .slider:before {
+    z-index: 1;
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 24px;
+    width: 24px;
     left: 4px;
-    bottom: 4px;
+    bottom: 2px;
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;

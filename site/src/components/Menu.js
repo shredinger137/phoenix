@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import '../css/menu.css';
 
-export default class Dates extends React.Component {
+export default class Menu extends React.Component {
 
   state = {
     menuToggled: false
@@ -44,7 +44,7 @@ export default class Dates extends React.Component {
               <li><Link to="/practices">Practices</Link></li>
               <li><Link to="/rollcall">Roll Call</Link></li>
               <li><Link to="/settings">Settings</Link></li>
-              <li><p onClick={this.props.logOut}>Logout</p></li>
+              <li><p onClick={this.props.logOut} style={{cursor: "pointer"}}>Logout</p></li>
             </ul>
           </div>
           <div id="menuToggle" onClick={() => this.toggle()}>

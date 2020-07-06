@@ -40,6 +40,7 @@ class Login extends React.Component {
           <br />
           <h1>Login</h1>
         </header>
+        <p>Demo/Dev Version: Sign in with username admin, password admin</p>
         <p>{this.state.loginResponse}</p>
         <br /><br />
         <form className="login text-center" style={{ margin: "0 auto" }} onSubmit={this.submitLogin.bind(this)}>

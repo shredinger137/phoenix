@@ -12,9 +12,40 @@ body {
     font-size: 1.2rem;
 }
 
+.contextMenu {
+    width: 100%;
+}
+
 .main {
     margin-top: 25px;
+    
 }
+
+#outerModal {
+    z-index: 7;
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+#innerModal {
+    z-index: 8;
+    background-color: #454544;
+    position: absolute;
+    left: 10%;
+    top: 10%;
+    width: 80%;
+    height: 80%;
+}
+
+.horizontalScroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
 
 .login {
     width: 25vw;
@@ -28,7 +59,7 @@ input {
 .button1 {
     background-color: black;
     display: inline-block;
-    padding: 0.35em 1.2em;
+    padding: 0.25em 1em;
     border: 0.1em solid #FFFFFF;
     margin:0 0.3em 0.3em 0;
     border-radius:0.12em;
@@ -75,12 +106,17 @@ tr {
 
     table, tr {
         width: 100vw;
+        border-spacing: 0;
     }
 
-    .button1 {
-        display: block;
-        margin: 0.2em auto;
-    }
+    
+.button1 {
+    padding: 0.15em .2em;
+    margin:0 0.2em 0.2em 0;
+    font-size: .9em;
+
+}
+
 
 
 

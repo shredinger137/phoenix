@@ -139,10 +139,12 @@ class RollCall extends React.Component {
   render() {
     return (
 
-      <div className="App">
+      <>
         <header>
           <h1>Roll Call</h1>
         </header>
+        <br />
+        
         <div className="contextMenu">
           <input type="date" id="date" onChange={this.loadAttendance.bind(this)}></input>
           <button className="button1" onClick={this.handleSave.bind(this)}>Save</button>
@@ -172,10 +174,7 @@ class RollCall extends React.Component {
             </tbody>
           </table>
         </div>
-        <div style={{height: "150vh"}}>
-
-        </div>
-      </div>)
+      </>)
 
 
   }
